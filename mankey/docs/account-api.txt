@@ -1,0 +1,31 @@
+#################################
+# login
+#################################
+input: 
+{
+    "name": "Tayler",
+    "email": "tayler@abc.ca",
+    "token":"AABBCC",
+    "app": "tiger"
+}
+if exists in redis, output:
+{
+    "id": "1f46443a-5be1-4e51-bfe5-d96594045190",
+    "name": "Tayler",
+    "email": "tayler@abc.ca",
+    "status": "u",
+    "roles": [
+        {
+            "id": 2,
+            "name": "captain"
+        }
+    ]
+}
+
+if email not exists in redis:
+	POST=> tiger:/account/sync [user]
+	insert {user , token} by key auth:app:email
+	redirect:  [redirect_uri] with HTTP 200
+else :
+	if token is different, update token 
+	redirect:  [redirect_uri] with HTTP 200
