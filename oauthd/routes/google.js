@@ -54,14 +54,16 @@ router.get('/callback', function(req, res) {
           let name = profile.displayName
           console.log('google plus API return, token=%s, email=%s, name=%s, app=%s', token, email, name, state.app)
 
-          // TODO: POST to mankey service /auth/token/sync to sync token and
+          // POST to mankey service /auth/token/sync to sync token and
           // user in redis
+
           let data = {
             email: email,
             name: name,
             token: token,
             app: state.app
           }
+          
           axiosClient.post('/auth/token/sync', data)
           .then((mankey_res) => {
             console.log(mankey_res.data);
@@ -90,36 +92,35 @@ router.get('/callback', function(req, res) {
 /* return a signin url
 http://localhost:3100/google/signin?path={vue path name}
 */
-router.get('/signin', function(req, res){
-  let path = req.query.path
-  let app = req.query.app
+router.get('/signin/:app', function(req, res){
+//  let path = req.query.path
+//  let app = req.query.app
+  let app = req
   console.log('call /sigin, path=%s, app=%s', path, app)
-  let state = {
-    path: path,
-    app: app
-  }
 
   let token_create_url = '/auth/token/create/' + app
 
   axiosClient.get(token_create_url)
   .then((token_create_res) => {
-    console.log('token_create_res=%j',token_create_res.data.jwt_token);
+    let jwt_token = token_create_res.data.jwt_token
+    // console.log('token_create_res=%j', jwt_token);
+    let state = { jwt_token: path }
+
+    var url = oauth2Client.generateAuthUrl({
+      // 'online' (default) or 'offline' (gets refresh_token)
+      access_type: 'offline',
+      scope: scopes,
+      prompt: 'consent',
+      // Optional property that passes state parameters to redirect URI
+      // state must be string
+      state: JSON.stringify(state)
+    });
+    return res.status(200).json(url);
   })
   .catch((token_create_err) => {
     console.log(token_create_err);
-    return res.status(500).json('requesting mankey server error');
+    return res.status(500).json('requesting token from mankey server error');
   });
-
-  var url = oauth2Client.generateAuthUrl({
-    // 'online' (default) or 'offline' (gets refresh_token)
-    access_type: 'offline',
-    scope: scopes,
-    prompt: 'consent',
-    // Optional property that passes state parameters to redirect URI
-    // state must be string
-    state: JSON.stringify(state)
-  });
-  return res.status(200).json(url);
 });
 
 module.exports = router;

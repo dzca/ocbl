@@ -28,7 +28,6 @@ def build_jwt_token(request, app):
     id = str(uuid.uuid4())
     app = 'tiger'
     jwt_token = jwt.encode({'id': id, 'app':app}, settings.JWT_SECRET,  algorithm='HS256')
-#     app = 'tiger'
     log.debug('generate jwt token app={0}'.format(app))
     return Response({ 'jwt_token' : jwt_token})
     
