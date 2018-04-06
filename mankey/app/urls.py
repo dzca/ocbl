@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from account.views import sync_oauth_token, query_user, build_jwt_token
+from account.views import sync_oauth_token, build_jwt_token,query_user
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/token/sync', sync_oauth_token),
-     url(r'^auth/token/create/(?P<app>[^/]+)/$', build_jwt_token),
-    # query user by POST [email, app, token]
-    url(r'^api/user/query', query_user),
+    url(r'^rest/auth/token/sync', sync_oauth_token),
+    url(r'^rest/auth/token/create/(?P<app>[^/]+)/$', build_jwt_token),
+    url(r'^api/account/get', query_user),
 ]

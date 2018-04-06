@@ -1,1 +1,30 @@
 https://stackoverflow.com/questions/42309986/vuejs-get-url-query
+
+
+axios.get('/google/signin',{
+  params: {
+    path: 'test_path',
+    app: 'tiger'
+  }
+}).then(res => {
+  console.log('res=%j', res)
+  this.googleUrl = res.data
+}, err => {
+  console.log('err=%j', err)
+})
+
+
+watch: {
+  todos: {
+    handler() {
+      console.log('Todos changed!');
+      localStorage.setItem('todos', JSON.stringify(this.todos));
+    },
+    deep: true,
+  },
+},
+
+mounted() {
+  console.log('App mounted!');
+  if (localStorage.getItem('todos')) this.todos = JSON.parse(localStorage.getItem('todos'));
+},

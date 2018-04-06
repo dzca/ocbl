@@ -39,64 +39,33 @@ def sync_oauth_token(request):
     and users database 
     
     Logic:
-    If account exists in redis, check token, update token if different, then return json {account, role }
-    if account does not exist, 
-        1) call [app]/account/sync to get {account, role }
-        2) insert {account, role } by auth:[app]:email ->  {account, role, token }
-        
-     sample request.data:    
+    lookup account from database and insert token->account pair into redis
+    
+    sample request.data:    
     {
-    "name": "Tayler",
-    "email": "tayler@abc.ca",
-    "token":"AABBCC",
-    "app":"tiger"
+    u'token': u'ya29.Glui', 
+    u'email': u'dike.zhang@gmail.com', 
+    u'name': u'Dustin Zhang'
     }
-    """
 
+    """
     account = request.data
     log.debug('login, receive account={0}'.format(account))
     
-    token = account.get('token')
-    email = account.get('email')
-    app = account.get('app')
+    jwt_token = account.get('token')
+    # decode app from jwt_token
+    dict_payload = jwt.decode(jwt_token, settings.JWT_SECRET, algorithms='HS256')
+    app = dict_payload.get('app')
+    str_user = sync_account(account, app)
+    cache.set(jwt_token, str_user, settings.REDIS_TOKEN_TIMEOUT_SEC)
     
-    key = app + ':' + email
-    # lookup user in redis cache
-    value = get_user_from_cache(key)
-     
-    if not value:
-        # no match in redis, sync account via tiger service
-        str_user = sync_account(account)
-        log.debug('user {0} not in redis, load user from database str_user={1}'.format(email, str_user))
-         
-        # user token must be string
-        json_user_token = { 'user': str_user, 'token': token}
-        str_user_token = json.dumps(json_user_token)
-        cache.set(key, str_user_token, settings.REDIS_TOKEN_TIMEOUT_SEC)
-    else:
-        # found in redis, convert string to json_user_token
-        log.debug('found key in redis str_user={0}'.format(value))
-        json_user_token = json.loads(value)
-        str_user = json_user_token.get('user')
-        str_token = json_user_token.get('token')
-        # update token if changed
-        if str_token != token:
-            json_user_token['token'] = token
-            str_user_token =  json.dumps(json_user_token)
-            cache.set(token, str_user_token, settings.REDIS_TOKEN_TIMEOUT_SEC)
-        else:
-            str_user_token = value
-         
-        log.debug('email {0} in redis, load user={1}, type={2}'.format(account.get('email'), str_user, type(str_user)))
-        
-    return Response({ 'user_token' : str_user_token})
+    return Response({ 'user' : str_user})
 
-def sync_account(account):
+def sync_account(account, app):
     '''
-    call call [app]/account/sync to sync account,
+    call call [app]/account/sync to get (new or existing) account,
     return json string {account, role }
     '''
-    app = account.get('app')
     res = requests.post(get_account_sync_url(app), account)
     # return user as json string
     str_user = res.text
@@ -115,33 +84,27 @@ def get_user_from_cache(key):
     Lookup user in redis cache
     return user string  if user exists,  null otherwise 
     '''
-
+    
     log.debug('lookup user in redis with key ={0}'.format(key))
-    str_user_token = cache.get(key)
-             
-    if not str_user_token:
+    str_user= cache.get(key)
+
+    if not str_user:
         return None
     else:
-        return str_user_token
-    
-@api_view(['POST'])
+        return str_user
+
+@api_view(['GET'])
 def query_user(request):
     """
-    API end point to query token by email:app + token
+    fetch account from redis, token in HTTP Header [Authorization]
     if hit: 
-        return user object
+        return account as json string
     else:
         return 401 and error_msg. UI jump to Home and show error message
-        
-     sample request.data:    
-    {
-    "email": "tayler@abc.ca",
-    "token":"AABBCC",
-    "app": "tiger"
-    }
     """
-#     if request.method == 'POST':
-#         return Response({"message": "Got some data!", "data": request.data})
-    account = request.data
-    log.info('login, receive account={0}, type={1}'.format(account, type(account)))
-    return Response({"message": "Hello, world!"})
+    token = request.META.get('HTTP_AUTHORIZATION')
+    
+    log.info('query_user HTTP header, receive token={0}'.format(token))
+    
+    str_user = get_user_from_cache(token)
+    return Response({ 'user' : str_user})

@@ -30,9 +30,12 @@ const scopes = [
 
 /* http://localhost:3100/google/callback?code={authorizationCode} */
 router.get('/callback', function(req, res) {
+  console.log('google auth api return, callback start.. state=%j', req.query.state)
+
   let code = req.query.code
   let state = JSON.parse(req.query.state)
-  log.info('get code=', {code:code, state: state})
+  let jwt_token = state.jwt_token
+  log.info('google auth api return, callback start code=', {code:code, jwt_token: jwt_token})
 
   oauth2Client.getToken(code, function (token_err, tokens) {
     // tokens contains an access_token and an optional refresh_token.
@@ -40,7 +43,7 @@ router.get('/callback', function(req, res) {
       oauth2Client.setCredentials(tokens);
       // console.log('tokens=%j, type=%s', tokens, _.isObject(tokens))
       let token = tokens.access_token
-      console.log('requesting google API access_token return, token=%s', token)
+      console.log('requesting google API access_token return, google_access_token=%s', token)
 
       googlePlus.people.get({
           userId: 'me',
@@ -52,7 +55,7 @@ router.get('/callback', function(req, res) {
           // find value (xyz@gmail.com) from "emails":[{"value":"xyz@gmail.com","type":"account"}]
           let email = _.property('value')(_.first(profile.emails))
           let name = profile.displayName
-          console.log('google plus API return, token=%s, email=%s, name=%s, app=%s', token, email, name, state.app)
+          console.log('google plus API return, token=%s, email=%s, name=%s', token, email, name)
 
           // POST to mankey service /auth/token/sync to sync token and
           // user in redis
@@ -60,15 +63,14 @@ router.get('/callback', function(req, res) {
           let data = {
             email: email,
             name: name,
-            token: token,
-            app: state.app
+            token: jwt_token
           }
-          
-          axiosClient.post('/auth/token/sync', data)
+
+          axiosClient.post('/rest/auth/token/sync', data)
           .then((mankey_res) => {
-            console.log(mankey_res.data);
+            // TODO: consider store user in localStorage
             // redirect page to /profile?token={xxxx}&email=xxxx
-            let url = 'http://localhost:8080/profile?token=' + token + '&email=' + email
+            let url = 'http://localhost:8080/profile'
             res.redirect(url)
           })
           .catch((mankey_err) => {
@@ -95,18 +97,18 @@ http://localhost:3100/google/signin?path={vue path name}
 router.get('/signin/:app', function(req, res){
 //  let path = req.query.path
 //  let app = req.query.app
-  let app = req
-  console.log('call /sigin, path=%s, app=%s', path, app)
+  let app = req.params.app
+  console.log('call /sigin/:app, app=%j', app)
 
-  let token_create_url = '/auth/token/create/' + app
+  let token_create_url = '/rest/auth/token/create/' + app
 
   axiosClient.get(token_create_url)
   .then((token_create_res) => {
     let jwt_token = token_create_res.data.jwt_token
     // console.log('token_create_res=%j', jwt_token);
-    let state = { jwt_token: path }
+    let state = { jwt_token: jwt_token }
 
-    var url = oauth2Client.generateAuthUrl({
+    let url = oauth2Client.generateAuthUrl({
       // 'online' (default) or 'offline' (gets refresh_token)
       access_type: 'offline',
       scope: scopes,
@@ -115,7 +117,10 @@ router.get('/signin/:app', function(req, res){
       // state must be string
       state: JSON.stringify(state)
     });
-    return res.status(200).json(url);
+
+    let data = {url: url, token: jwt_token}
+
+    return res.status(200).json(data);
   })
   .catch((token_create_err) => {
     console.log(token_create_err);

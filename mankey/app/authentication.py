@@ -14,7 +14,7 @@ from django.conf import settings
 class TokenAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
         path = request.path
-        log.debug('get path = {0}'.format(path))
+        log.debug('TokenAuthentication get path = {0}'.format(path))
         
         #if path start with /rest/* pass it
         parser = re.compile(r'^/rest/(\w+/)+.*')
@@ -23,12 +23,12 @@ class TokenAuthentication(authentication.BaseAuthentication):
             return None
         
         token = request.META.get('HTTP_AUTHORIZATION')
+        log.debug('TokenAuthentication get token = {0}'.format(token))
         if not token:
             raise exceptions.AuthenticationFailed('Authorization Token required')
         else:
             # lookup redis to see if token exists
             # if not, return exception, else return user
-            log.debug('get token = {0}'.format(token))
             value = cache.get(token)
             
             if value == None:

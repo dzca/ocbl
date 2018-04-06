@@ -71,6 +71,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'app.authentication.TokenAuthentication',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -167,6 +172,11 @@ LOGGING = {
     },
     'loggers': {
         'account': {
+            'handlers': ['console','debug.logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'app': {
             'handlers': ['console','debug.logfile'],
             'level': 'DEBUG',
             'propagate': True,

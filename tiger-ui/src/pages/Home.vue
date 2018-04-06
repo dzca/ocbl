@@ -22,16 +22,13 @@ export default {
     }
   },
   created: function () {
-    // this.googleUrl url send state
+    axios.get('/google/signin/tiger').then(res => {
+      console.log('url=%s', res.data.url)
+      console.log('token=%s', res.data.token)
+      this.googleUrl = res.data.url
 
-    axios.get('/google/signin',{
-      params: {
-        path: 'test_path',
-        app: 'tiger'
-      }
-    }).then(res => {
-      console.log('res=%j', res)
-      this.googleUrl = res.data
+      // save token into localstorage
+      localStorage.setItem('tiger-token',res.data.token);
     }, err => {
       console.log('err=%j', err)
     })
