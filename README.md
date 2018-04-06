@@ -1,5 +1,5 @@
 # ocbl
-ocbl.ca web site
+ocbl.ca web site, oauth2 implementation
 
 ## System diagram
 ![System diagram](/images/ocbl-sso-architect.jpg)
