@@ -1,0 +1,38 @@
+.mint-tab-item-label {
+  font-size: 15px;
+}
+
+.mint-cell-wrapper {
+  font-size: 14px;
+}
+
+.mint-header {
+  height: 45px;
+  font-size: 16px;
+  .mint-header-title {
+    font-weight: bold;
+  }
+}
+
+/*
+.mint-navbar {
+  height: 43px;
+}
+*/
+
+body, button, input, select, textarea {
+  // font-family: 'helvetica neue', 'hiragino sans gb', stheiti, 'wenquanyi micro hei', 微软雅黑, 宋体, sans-serif;
+  font-family: 'Arial', 'Helvetia', 'Verdana';
+
+// Times New Roman
+// Courier
+// Garamondnpm install sass-loader node-sass style-loader --save-dev
+// Georgia
+
+}
+
+body {
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}

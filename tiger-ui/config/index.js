@@ -30,11 +30,11 @@ module.exports = {
         "changeOrigin": true
       },
       "/tiger/*": {
-        "target": "http://localhost:8080",
+        "target": "http://localhost:5100",
         "secure": false,
         "logLevel": "debug",
         "pathRewrite": {
-          "^/": ""
+          "^/tiger": ""
         },
         "changeOrigin": true
       }

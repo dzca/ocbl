@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import _ from 'underscore'
 
 export default {
@@ -32,10 +31,10 @@ export default {
       let auth_token = localStorage.getItem('tiger-token')
       // JSON.parse(localStorage.getItem('tiger-token'))
       console.log('add auth_token=%s', auth_token)
-      axios.defaults.headers.common['Authorization'] = auth_token;
+      this.axios.defaults.headers.common['Authorization'] = auth_token;
 
       // Testing the api here
-      axios.get('/mankey/api/account/get')
+      this.axios.get('/mankey/api/account/get')
       .then(res => {
 
         let account = JSON.parse(res.data.user)

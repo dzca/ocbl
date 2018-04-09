@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/pages/Home'
+import Schedule from '@/pages/Schedule'
+// import Test from '@/pages/Test'
 import Profile from '@/pages/Profile'
 import HelloWorld from '@/components/HelloWorld'
 
@@ -13,10 +15,15 @@ const routes = [
     component: Home
   },
   {
-    path: '/hello',
-    name: 'HelloWorld',
-    component: HelloWorld
+    path: '/schedule',
+    name: 'schedule',
+    component: Schedule
   },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   component: Test
+  // },
   {
     path: '/profile',
     name: 'Profile',

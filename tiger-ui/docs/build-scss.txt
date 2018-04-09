@@ -1,0 +1,46 @@
+npm install sass-loader node-sass style-loader --save-dev
+
+add bootstrap
+https://medium.com/@BjornKrols/integrating-and-customising-bootstrap-4-in-vue-js-cbc29ba7688e
+
+npm install bootstrap --save
+
+app.uve
+<style lang="scss">
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+</style>
+
+======================
+<template>
+<div>
+  <h3>Home</h3>
+  <span v-for="n in 10">{{ n }} </span>
+
+  <mt-tab-container v-model="myList">
+  <mt-tab-container-item id="tab-container1">
+    <mt-cell v-for="x in myList" :key="x" title="tab-container 1">{{ x }}</mt-cell>
+  </mt-tab-container-item>
+
+</mt-tab-container>
+</div>
+</template>
+
+
+<script>
+import { Cell, TabContainer, TabContainerItem } from 'mint-ui';
+export default {
+  data() {
+    return {
+      title: 'Home',
+      myList: [1,2,3,4,5]
+    }
+  },
+  components: {
+    Cell,
+    TabContainer, TabContainerItem
+  }
+}
+</script>
+<style lang="scss">
+
+</style>

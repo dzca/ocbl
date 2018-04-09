@@ -1,0 +1,11 @@
+<div>
+  <h2>About</h2>
+  <p>We are a local Chinese basketball club located in Kitchener, team kitchener tiger is founded in September, 2016. And we a having team sessions once a week.</p>
+  <p>In 2016 season, we officially joined Ontario Chinese Basketball League(OCBL) and placed 3rd in the league. we invited local coach Gray Boug in 2016. And we are preparing for 2017 OCBL game.</p>
+
+  <ul>
+    <li>To join: please contact tiger.kitchener[a]gmail.com</li>
+    <li>To check OCBL: please visit www.ocbl.ca</li>
+    <li>To check club schedule: please check <a href="/schedule">Schedule Page</a></li>
+  </ul>
+</div>
