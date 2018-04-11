@@ -1,18 +1,5 @@
 from rest_framework import serializers
 
-# from team.models import Team, Season
-
-# class TeamSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Team
-#         fields = ('id', 'name', 'city', 'created')
-# 
-# 
-# class SeasonSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Season
-#         fields = ('id', 'name', 'address', 'year', 'game_type', 'created')
-            
 from models import Account, Role
 
 

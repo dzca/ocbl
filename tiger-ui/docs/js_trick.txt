@@ -32,3 +32,6 @@ You can do destructuring as well. Let’s say fruits was an array of fruit objec
 
 [4] traps
 https://blog.csdn.net/Iohboel/article/details/75228390
+
+[4] share axios
+https://alligator.io/vuejs/rest-api-axios/

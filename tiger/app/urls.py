@@ -17,22 +17,37 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from rbac.views import AccountViewSet, RoleViewSet, account_sync
-# , SeasonViewSet, TeamViewSet, github_callback
 
+# schedule
+from schedule.views import SeasonViewSet, SessionViewSet, get_current_season
+# account
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'account', AccountViewSet)
 router.register(r'role', RoleViewSet)
-# router.register(r'seasons', SeasonViewSet)
-# router.register(r'teams', TeamViewSet)
+router.register(r'season', SeasonViewSet)
+router.register(r'session', SessionViewSet)
 # router.register(r'github', GithubViewSet)
 
+# contents
+from content.views import ContentViewSet
+api_content_list = ContentViewSet.as_view({'get': 'list'})
+api_content_detail = ContentViewSet.as_view({'get': 'detail'})
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(router.urls)),
+    # schedule
+    url(r'^rest/schedule',get_current_season),
+    
+    # account
     url(r'^account/sync', account_sync),
+    
+    # contents
+    url(r'^api/notice', api_content_list, name='api_content_list'),
+    url(r'^api/page/(?P<slug>[^/]+)$', api_content_detail, name = 'api_content_detail'),
+    
+    url(r'^api/', include(router.urls)),
 ]
 
 # from app import settings

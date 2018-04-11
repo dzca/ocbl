@@ -29,6 +29,7 @@
 import { Indicator, Cell, Tabbar, TabItem } from 'mint-ui'
 import { mapGetters, mapActions } from 'vuex'
 import _ from 'underscore'
+import axios from 'axios'
 
 export default {
 
@@ -52,12 +53,12 @@ export default {
   methods: {
     getList() {
 
-      Indicator.open({
-        text: 'loading...',
-        spinnerType: 'snake'
-      })
-      this.axios.get('/tiger/rest/schedule/?format=json').then(({ data }) => {
-        Indicator.close()
+      // Indicator.open({
+      //   text: 'loading...',
+      //   spinnerType: 'snake'
+      // })
+      axios.get('/tiger/rest/schedule/?format=json').then(({ data }) => {
+        // Indicator.close()
         this.season = {name:data.name, school: data.school, address: data.address}
         let sessions = data.sessions
         console.log('load sessions=%j', sessions)

@@ -8,3 +8,12 @@ python manage.py migrate
  
  N+1 problem
  http://ses4j.github.io/2015/11/23/optimizing-slow-django-rest-framework-performance/
+ 
+ date reference
+ http://strftime.org/
+ 
+ 
+[2] save slug
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Content, self).save(*args, **kwargs)

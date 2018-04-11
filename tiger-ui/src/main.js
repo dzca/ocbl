@@ -11,6 +11,7 @@ import 'mint-ui/lib/style.css'
 import '@/assets/css/styles.scss'
 
 import axios from 'axios'
+
 Vue.prototype.axios = axios
 
 Vue.use(MintUI)

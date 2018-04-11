@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/pages/Home'
 import Schedule from '@/pages/Schedule'
-// import Test from '@/pages/Test'
+import Notice from '@/pages/Notice'
 import Profile from '@/pages/Profile'
 import HelloWorld from '@/components/HelloWorld'
 
@@ -18,6 +18,11 @@ const routes = [
     path: '/schedule',
     name: 'schedule',
     component: Schedule
+  },
+  {
+    path: '/notices',
+    name: 'notices',
+    component: Notice
   },
   // {
   //   path: '/test',
