@@ -54,12 +54,6 @@ app.use(function(error, req, res, next) {
 	});
 });
 
-// http.createServer(app).listen(cfg.app.port, ()=>{
-//     console.log('http server listening on port ' + cfg.app.port);
-//   	log.info('http server listening on port ' + cfg.app.port);
-// });
-
-// This method is identical to Node’s http.Server.listen().
 app.listen(cfg.app.port, function(){
   console.log('server listening on port ' + cfg.app.port);
 	log.info('server listening on port ' + cfg.app.port);

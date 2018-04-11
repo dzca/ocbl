@@ -1,3 +1,0 @@
-curl -H 'bizline:yes' -H 'realip:108.92.185.42' -H 'opcode:123456' -H 'version:v1.0' -d 'data={"product":{"productid":"abc"},"uid":"123","filter":111111}' 'http://xxx.baidu.com/a/b'
-
-curl -H 'Authorization: Bearer TOKEN_STRING' http://localhost:3000/api/battles/private

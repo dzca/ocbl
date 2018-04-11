@@ -39,21 +39,13 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # schedule
     url(r'^rest/schedule',get_current_season),
-    
+
     # account
     url(r'^account/sync', account_sync),
-    
+
     # contents
     url(r'^api/notice', api_content_list, name='api_content_list'),
     url(r'^api/page/(?P<slug>[^/]+)$', api_content_detail, name = 'api_content_detail'),
-    
+
     url(r'^api/', include(router.urls)),
 ]
-
-# from app import settings
-# 
-# if settings.DEBUG:
-#     import debug_toolbar
-#     urlpatterns = [
-#         url(r'^__debug__/', include(debug_toolbar.urls)),
-#     ] + urlpatterns
