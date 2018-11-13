@@ -6,8 +6,13 @@
 </template>
 
 <script>
-import { Indicator } from 'mint-ui'
-import { mapGetters, mapActions } from 'vuex'
+import {
+  Indicator
+} from 'mint-ui'
+import {
+  mapGetters,
+  mapActions
+} from 'vuex'
 
 export default {
 

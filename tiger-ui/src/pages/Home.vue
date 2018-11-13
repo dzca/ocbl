@@ -1,7 +1,6 @@
 <template>
 <div>
   <div v-html="markdownPage">
-
   </div>
 
   <a :href="githubUrl">
@@ -26,7 +25,7 @@ export default {
       page: ''
     }
   },
-  created: function () {
+  created: function() {
 
     this.axios.get('/tiger/api/page/home').then(res => {
       console.log('body=%s', res.data.body)
@@ -41,14 +40,16 @@ export default {
       this.googleUrl = res.data.url
 
       // save token into localstorage
-      localStorage.setItem('tiger-token',res.data.token);
+      localStorage.setItem('tiger-token', res.data.token);
     }, err => {
       console.log('err=%j', err)
     })
   },
   computed: {
-    markdownPage: function () {
-      return marked(this.page, { sanitize: true })
+    markdownPage: function() {
+      return marked(this.page, {
+        sanitize: true
+      })
     }
   },
   methods: {
@@ -59,7 +60,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-
 /*
 .login-icon {
   width: 40px;
